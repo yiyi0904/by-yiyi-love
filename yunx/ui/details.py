@@ -17,6 +17,9 @@ from .widgets import AnimatedButton, ScrollableFrame
 
 UI = "Microsoft YaHei UI"
 
+WECHAT_ID = "lonely0411"
+CONTACT_MAIL = "3260254728@qq.com"
+
 SUPPORTED_PLATFORMS = ("夸克网盘", "UC 网盘", "迅雷网盘", "百度网盘", "移动云盘(139)", "123 云盘")
 
 FEATURES = (
@@ -209,9 +212,51 @@ class DetailsDialog(_BaseDialog):
                 fg=theme.TEXT_FAINT, font=(UI, 9),
             ).pack(pady=(0, 18))
 
+        # ---------- 反馈与联系 ----------
+        tk.Frame(body, bg=theme.BORDER, height=1).pack(fill="x", padx=16, pady=(0, 4))
+        tk.Label(
+            body, text="反馈与联系", bg=theme.PANEL, fg=theme.TEXT,
+            font=(UI, 11, "bold"), anchor="w",
+        ).pack(fill="x", padx=16, pady=(12, 4))
+        tk.Label(
+            body, text="遇到问题、想提建议，或者只是想聊两句，都可以找我：",
+            bg=theme.PANEL, fg=theme.TEXT_DIM, font=(UI, 9), anchor="w",
+        ).pack(fill="x", padx=16, pady=(0, 8))
+
+        for label, value in (("微信", WECHAT_ID), ("邮箱", CONTACT_MAIL)):
+            row = tk.Frame(body, bg=theme.PANEL)
+            row.pack(fill="x", padx=16, pady=3)
+            tk.Label(
+                row, text=label, bg=theme.PANEL, fg=theme.TEXT_DIM,
+                font=(UI, 9), width=6, anchor="w",
+            ).pack(side="left")
+            tk.Label(
+                row, text=value, bg=theme.PANEL, fg=theme.ACCENT,
+                font=(UI, 10, "bold"), anchor="w",
+            ).pack(side="left")
+            AnimatedButton(
+                row, "复制", (lambda v=value: self._copy(v)), kind="quiet",
+                parent_bg=theme.PANEL, height=26, padx=12,
+            ).pack(side="left", padx=8)
+            if label == "邮箱":
+                AnimatedButton(
+                    row, "发邮件", (lambda v=value: self._mailto(v)), kind="ghost",
+                    parent_bg=theme.PANEL, height=26, padx=12,
+                ).pack(side="left")
+        tk.Label(
+            body, text="（也可以直接在仓库提 Issue，我会尽快看）",
+            bg=theme.PANEL, fg=theme.TEXT_FAINT, font=(UI, 9), anchor="w",
+        ).pack(fill="x", padx=16, pady=(8, 18))
+
         apply_window_icon(self)
 
     # -- 小工具 -------------------------------------------------------------
+    def _mailto(self, address: str) -> None:
+        try:
+            webbrowser.open(f"mailto:{address}")
+        except Exception:  # noqa: BLE001
+            pass
+
     def _copy(self, text: str) -> None:
         try:
             self.clipboard_clear()
