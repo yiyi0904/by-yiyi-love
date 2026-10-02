@@ -10,7 +10,7 @@ import webbrowser
 
 from .. import APP_NAME, __version__
 from ..config import Config
-from ..util import apply_window_icon
+from ..util import apply_window_icon, asset_path
 from . import theme
 from .dialogs import _BaseDialog
 from .widgets import AnimatedButton, ScrollableFrame
@@ -47,7 +47,7 @@ class DetailsDialog(_BaseDialog):
         super().__init__(master, f"{APP_NAME} · 详细信息", 660, 640)
         self.config_store = config
 
-        head = tk.Frame(self, bg=theme.BG)
+        head = tk.Frame(self.body, bg=theme.BG)
         head.pack(fill="x", padx=22, pady=(18, 4))
         tk.Label(
             head, text=APP_NAME, bg=theme.BG, fg=theme.TEXT,
@@ -61,7 +61,7 @@ class DetailsDialog(_BaseDialog):
             head, "关闭", self.destroy, kind="quiet", parent_bg=theme.BG
         ).pack(side="right")
 
-        panel = tk.Frame(self, bg=theme.PANEL, highlightthickness=1,
+        panel = tk.Frame(self.body, bg=theme.PANEL, highlightthickness=1,
                          highlightbackground=theme.BORDER)
         panel.pack(fill="both", expand=True, padx=22, pady=(6, 18))
         self.scroll = ScrollableFrame(panel, bg=theme.PANEL)
@@ -166,6 +166,48 @@ class DetailsDialog(_BaseDialog):
             "本程序基于 GNU AGPL-3.0 协议开源，接口逻辑版权归原项目 CYQawa/YunX 所有。",
             pady_bottom=16,
         )
+
+        # ---------- 制作声明 ----------
+        tk.Frame(body, bg=theme.BORDER, height=1).pack(fill="x", padx=16, pady=(0, 4))
+        tk.Label(
+            body, text="制作声明", bg=theme.PANEL, fg=theme.TEXT,
+            font=(UI, 11, "bold"), anchor="w",
+        ).pack(fill="x", padx=16, pady=(12, 4))
+        tk.Label(
+            body,
+            text=(
+                f"{APP_NAME} 由 亦亦 制作与维护，基于开源项目 YunX（云析）二次开发。\n"
+                "本程序完全免费开源，仅在本人的代码仓库发布；"
+                "如果你是通过付费购买得到它的，那一定是被坑了，请及时退款。\n"
+                "欢迎提 Issue 反馈问题，也欢迎点个 Star 支持一下。"
+            ),
+            bg=theme.PANEL, fg=theme.TEXT_DIM, font=(UI, 9),
+            anchor="w", justify="left", wraplength=520,
+        ).pack(fill="x", padx=16, pady=(0, 10))
+
+        # ---------- 赞赏支持 ----------
+        tk.Label(
+            body, text="赞赏支持", bg=theme.PANEL, fg=theme.TEXT,
+            font=(UI, 11, "bold"), anchor="w",
+        ).pack(fill="x", padx=16, pady=(6, 2))
+        tk.Label(
+            body, text="如果这个工具帮到了你，可以请我喝杯奶茶 ☕ 谢谢支持！",
+            bg=theme.PANEL, fg=theme.TEXT_DIM, font=(UI, 9), anchor="w",
+        ).pack(fill="x", padx=16, pady=(0, 8))
+        try:
+            self._reward_image = tk.PhotoImage(file=asset_path("assets/reward_qr.png"))
+            holder = tk.Frame(body, bg=theme.PANEL)
+            holder.pack(pady=(0, 6))
+            tk.Label(holder, image=self._reward_image, bg=theme.PANEL, bd=0).pack()
+            tk.Label(
+                body, text="微信扫码赞赏 · 亦亦 的赞赏码", bg=theme.PANEL,
+                fg=theme.TEXT_FAINT, font=(UI, 9),
+            ).pack(pady=(0, 18))
+        except Exception:  # noqa: BLE001
+            tk.Label(
+                body, text="（赞赏码图片缺失）", bg=theme.PANEL,
+                fg=theme.TEXT_FAINT, font=(UI, 9),
+            ).pack(pady=(0, 18))
 
         apply_window_icon(self)
 

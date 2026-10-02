@@ -8,7 +8,7 @@ import sys
 import time
 import faulthandler
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from yunx.models import Platform
 from yunx.weblogin import get_login_service

@@ -12,7 +12,7 @@ from ..platforms import all_clients
 from ..util import apply_window_icon
 from ..weblogin import get_login_service
 from . import theme
-from .anim import Tween, mix
+from .anim import Tween, enable_smooth_timers, mix
 from .widgets import AnimatedButton
 
 
@@ -23,35 +23,63 @@ class _BaseDialog(tk.Toplevel):
         self.configure(bg=theme.BG)
         self.transient(master)
         self.grab_set()
+        # 内容按最终尺寸固定居中放置：动画只改变窗口大小，内容不再重排，
+        # 这样弹出过程才不会出现控件跳动（卡顿感来源）。
+        self._content = tk.Frame(
+            self, bg=theme.BG, width=width, height=height,
+            highlightthickness=0, bd=0,
+        )
+        self._content.pack_propagate(False)
+        self._content.place(
+            relx=0.5, rely=0.5, anchor="center", width=width, height=height
+        )
+        self.body = self._content
         self.update_idletasks()
         x = master.winfo_rootx() + (master.winfo_width() - width) // 2
         y = master.winfo_rooty() + (master.winfo_height() - height) // 2
         self._pop_box = (max(x, 0), max(y, 0), width, height)
         # 动画期间允许改变尺寸，否则 Tk 会把窗口锁在内容尺寸、弹出手感会失效
         self.resizable(True, True)
-        self.minsize(int(width * 0.7), int(height * 0.7))
+        self.minsize(int(width * 0.85), int(height * 0.85))
         self.maxsize(width, height)
+        try:
+            self.attributes("-alpha", 0.0)
+        except Exception:  # noqa: BLE001
+            pass
         self.geometry(f"{width}x{height}+{max(x, 0)}+{max(y, 0)}")
         apply_window_icon(self)
+        enable_smooth_timers()
         self._pop_in(0.0)
 
-    def _pop_in(self, t: float) -> None:
-        """从中心弹出：尺寸由 86% 放大到 100%，同时淡入。"""
-        t = min(1.0, max(0.0, t))
+    def _pop_in(self, start=None) -> None:
+        """从中心弹出：尺寸由 90% 放大到 100%，同时淡入（按真实时间推进，避免掉帧感）。
+
+        - 内容按最终尺寸固定居中，缩放时不会重新排版；
+        - 尺寸只在开头几步变化，其余帧只改透明度（改透明度几乎零开销）。
+        """
+        import time
+
+        if start is None:
+            start = time.perf_counter()
+        duration = 0.19
+        t = min(1.0, max(0.0, (time.perf_counter() - start) / duration))
         eased = 1 - (1 - t) ** 3
         base_x, base_y, full_w, full_h = self._pop_box
-        scale = 0.86 + 0.14 * eased
-        width = int(full_w * scale)
-        height = int(full_h * scale)
-        x = base_x + (full_w - width) // 2
-        y = base_y + (full_h - height) // 2
         try:
-            self.geometry(f"{width}x{height}+{x}+{y}")
-            self.attributes("-alpha", min(1.0, 0.15 + 0.85 * eased))
+            if t < 0.45:
+                # 前 45% 时间做尺寸放大，之后不再动窗口（避免整窗重绘）
+                p = t / 0.45
+                scale = 0.90 + 0.10 * (1 - (1 - p) ** 2)
+                width = int(full_w * scale)
+                height = int(full_h * scale)
+                x = base_x + (full_w - width) // 2
+                y = base_y + (full_h - height) // 2
+                self.geometry(f"{width}x{height}+{x}+{y}")
+            self.attributes("-alpha", min(1.0, 0.35 + 0.65 * eased))
         except Exception:  # noqa: BLE001
             return
         if t < 1.0:
-            self.after(14, lambda: self._pop_in(t + 0.11))
+            self.after(8, lambda: self._pop_in(start))
         else:
             # 动画结束：钉住最终尺寸并禁止缩放
             try:
@@ -76,11 +104,11 @@ class CredentialDialog(_BaseDialog):
         self._login_queue: queue.Queue | None = None
         self._login_platform: Platform | None = None
 
-        header = ttk.Frame(self, style="TFrame")
+        header = ttk.Frame(self.body, style="TFrame")
         header.pack(fill="x", padx=20, pady=(18, 6))
         ttk.Label(header, text="账号与凭证", style="Title.TLabel").pack(side="left")
 
-        body = ttk.Frame(self, style="Panel.TFrame")
+        body = ttk.Frame(self.body, style="Panel.TFrame")
         body.pack(fill="both", expand=True, padx=20, pady=(6, 16))
 
         left = tk.Frame(body, bg=theme.PANEL)
@@ -420,8 +448,10 @@ class SettingsDialog(_BaseDialog):
         self.config = config
         self.changed = False
 
-        ttk.Label(self, text="设置", style="Title.TLabel").pack(anchor="w", padx=20, pady=(18, 4))
-        panel = ttk.Frame(self, style="Panel.TFrame")
+        ttk.Label(self.body, text="设置", style="Title.TLabel").pack(
+            anchor="w", padx=20, pady=(18, 4)
+        )
+        panel = ttk.Frame(self.body, style="Panel.TFrame")
         panel.pack(fill="both", expand=True, padx=20, pady=(4, 16))
         inner = tk.Frame(panel, bg=theme.PANEL)
         inner.pack(fill="both", expand=True, padx=18, pady=16)

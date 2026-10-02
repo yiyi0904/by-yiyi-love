@@ -8,6 +8,20 @@ from typing import Callable
 FRAME_MS = 16  # ≈60fps
 
 
+def enable_smooth_timers() -> None:
+    """把 Windows 计时器精度提到 1ms。
+
+    系统默认精度是 15.6ms，`after(16)` 常被拖到 ~31ms —— 这正是弹窗动画卡顿的根因。
+    进程退出时由系统自动归还，无需手动结束。
+    """
+    try:
+        import ctypes
+
+        ctypes.windll.winmm.timeBeginPeriod(1)
+    except Exception:  # noqa: BLE001
+        pass
+
+
 # --------------------------------------------------------------------------
 # 颜色
 # --------------------------------------------------------------------------

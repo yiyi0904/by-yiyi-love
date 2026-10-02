@@ -7,7 +7,7 @@ import os
 import sys
 import tempfile
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from yunx.platforms.c139 import decrypt_body, encrypt_body, sign_header
 from yunx.platforms.pan123 import decode_download_url, make_sign

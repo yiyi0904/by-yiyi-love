@@ -19,9 +19,9 @@ import win32gui
 import win32ui
 from PIL import Image
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-BASE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WM_GETICON = 0x007F
 ICON_BIG = 1
 GCLP_HICON = -14

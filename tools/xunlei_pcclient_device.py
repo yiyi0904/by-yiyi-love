@@ -7,7 +7,7 @@ import os
 import sys
 import time
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from yunx.net import api_request
 from yunx.platforms.xunlei import AUTH_BASE, _load_device_id, build_captcha_sign

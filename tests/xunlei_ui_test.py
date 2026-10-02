@@ -7,7 +7,7 @@ import sys
 import time
 import tkinter as tk
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from yunx.platforms.xunlei import XunleiClient
 from yunx.ui import theme

@@ -99,7 +99,12 @@ def _selftest() -> int:
         details.update()
         assert details.winfo_width() > 400 and details.winfo_height() > 400
         lines.append(
-            f"details dialog ok: {details.winfo_width()}x{details.winfo_height()}"
+            "details dialog ok: %dx%d 赞赏码=%s"
+            % (
+                details.winfo_width(),
+                details.winfo_height(),
+                "已加载" if hasattr(details, "_reward_image") else "缺失",
+            )
         )
         details.destroy()
         app._on_close()

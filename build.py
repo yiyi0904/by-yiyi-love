@@ -26,6 +26,8 @@ ARGS = [
     f"{os.path.join(BASE, 'app.ico')}{os.pathsep}.",
     "--add-data",
     f"{os.path.join(BASE, 'icon.png')}{os.pathsep}.",
+    "--add-data",
+    f"{os.path.join(BASE, 'assets', 'reward_qr.png')}{os.pathsep}assets",
     "--collect-submodules",
     "yunx",
     "--collect-all",

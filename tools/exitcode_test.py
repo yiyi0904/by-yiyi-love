@@ -12,7 +12,7 @@ import win32con
 import win32gui
 import win32process
 
-BASE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WM_CLOSE = 0x0010
 
 

@@ -12,7 +12,7 @@ import win32con
 import win32gui
 import win32process
 
-BASE = os.path.dirname(os.path.abspath(__file__))
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def windows_of(pid: int) -> list[tuple[int, str, str]]:

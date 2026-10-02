@@ -20,6 +20,7 @@ from ..platforms import get_client
 from ..util import apply_window_icon, human_size, human_speed, open_in_explorer
 from . import theme
 from .dialogs import CredentialDialog, SettingsDialog
+from .anim import enable_smooth_timers
 from .widgets import AnimatedButton, BusySpinner, ScrollableFrame, TaskCard
 
 
@@ -27,6 +28,7 @@ class MainWindow(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
         self.config_store = Config()
+        enable_smooth_timers()
         theme.set_palette(self.config_store.get("theme", "dark"))
         self.fonts = theme.apply_theme(self)
         set_proxy(self.config_store.get("proxy", ""))

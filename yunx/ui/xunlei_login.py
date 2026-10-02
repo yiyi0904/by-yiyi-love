@@ -30,17 +30,17 @@ class XunleiLoginDialog(_BaseDialog):
         self._busy = False
         self._events: queue.Queue = queue.Queue()
 
-        ttk.Label(self, text="登录迅雷网盘", style="Title.TLabel").pack(
+        ttk.Label(self.body, text="登录迅雷网盘", style="Title.TLabel").pack(
             anchor="w", padx=20, pady=(18, 2)
         )
         ttk.Label(
-            self,
+            self.body,
             text="使用迅雷账号登录。若触发安全验证，会需要短信验证码。",
             style="Dim.TLabel",
             background=theme.BG,
         ).pack(anchor="w", padx=20)
 
-        panel = ttk.Frame(self, style="Panel.TFrame")
+        panel = ttk.Frame(self.body, style="Panel.TFrame")
         panel.pack(fill="both", expand=True, padx=20, pady=(10, 16))
         body = tk.Frame(panel, bg=theme.PANEL)
         body.pack(fill="both", expand=True, padx=18, pady=16)
