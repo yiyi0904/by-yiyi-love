@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# 打包产物
+build/
+dist/
+*.spec
+*.json.tmp
+
+# 调试 / 截图产物（不入库）
+*.log
+/xjs_*.js
+/xjs2_*.js
+/xunlei_*.html
+/icon_check_login.json
+/icon_preview.png
+/window_icon.png
+/window_top.png
+/window_ui.png
+/extracted_exe_icon.png
+/buttons_zoom.png
+/theme_zoom.png
+/details_zoom.png
+/dialog_*.png
