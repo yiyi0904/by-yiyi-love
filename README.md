@@ -9,6 +9,13 @@
 
 ![主界面](assets/screenshot_dark.png)
 
+## 下载
+
+* **可执行文件**：到 [Releases](https://github.com/yiyi0904/by-yiyi-love/releases) 页面下载 `亦析PC.exe`
+* **源码**：直接 clone 本仓库，按下方说明自行构建
+
+> Windows 10 / 11，免安装，双击即用。
+
 ## 支持的网盘
 
 | 平台 | 登录方式 | 取链方式 |

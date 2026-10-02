@@ -18,6 +18,8 @@ dist/
 /window_icon.png
 /window_top.png
 /window_ui.png
+/window_ui_dark.png
+/window_ui_light.png
 /extracted_exe_icon.png
 /buttons_zoom.png
 /theme_zoom.png

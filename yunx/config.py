@@ -28,7 +28,7 @@ def _defaults() -> dict[str, Any]:
         "xunlei_refresh_token": "",
         "proxy": "",
         "theme": "dark",
-        "repo_url": "",
+        "repo_url": "https://github.com/yiyi0904/by-yiyi-love",
         "download_dir": default_download_dir(),
         "threads": dict(DEFAULT_THREADS),
         "max_concurrent_tasks": 3,
