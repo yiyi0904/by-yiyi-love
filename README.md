@@ -74,7 +74,3 @@ yunx/
 请勿用于传播盗版、侵权或违法内容，使用产生的后果由使用者自行承担。
 
 
-## 开源协议
-
-本项目基于 **GNU AGPL-3.0** 协议开源（与上游 YunX 一致）。
-接口逻辑版权归原项目 [CYQawa/YunX](https://github.com/CYQawa/YunX) 所有。
