@@ -91,6 +91,17 @@ def _selftest() -> int:
             assert bottom <= dialog.winfo_height(), f"{_p.value}: 按钮越界 {bottom}"
         lines.append(f"credential dialog ok: {dialog.winfo_width()}x{dialog.winfo_height()}")
         dialog.destroy()
+
+        from yunx.ui.details import DetailsDialog
+
+        details = DetailsDialog(app, Config())
+        details.update_idletasks()
+        details.update()
+        assert details.winfo_width() > 400 and details.winfo_height() > 400
+        lines.append(
+            f"details dialog ok: {details.winfo_width()}x{details.winfo_height()}"
+        )
+        details.destroy()
         app._on_close()
 
         lines.append(_selftest_webview())
